@@ -113,9 +113,18 @@ io.sockets.on("connection",function (socket) {
         data.socketID = io.id;
         data.yazi = escapeHtml(data.yazi);
         data.user = escapeHtml(data.user);
-        timeNow = new Date();
+        timeNow = new Date(Date.UTC());
         var hours   = timeNow.getHours();
         var minutes = timeNow.getMinutes()
+		if(hours < 21)
+		{
+			hours += 3;
+		}else 
+		{
+			var hourss = 24 - hours;
+			var kalan = 3 - hourss ;
+			hours = kalan;
+		}
         var timeString  = ((hours < 10) ? "0" : "") + hours;
         timeString  += ((minutes < 10) ? ":0" : ":") + minutes;
         data.saat = timeString;
