@@ -17,7 +17,7 @@ var kullanici = decodeURI(readCookie("name"));
 var id = decodeURI(readCookie("fbID"));
 if(id == null || id == 'undefined' || name == null)
 {
-    window.location.replace("http://localhost:8080/auth/facebook");
+    window.location.replace("https://dwtchat.cleverapps.io/auth/facebook");
 
 }else
 {
