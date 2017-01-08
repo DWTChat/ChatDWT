@@ -6,15 +6,70 @@ var express = require("express");
 var app = express();
 
 var server = app.listen(8080);
+var fs = require('fs');
+
 var io = require("socket.io").listen(server);
 var path = require("path");
 var graph     = require('fbgraph');
+var secretKey = "SanaNeNiyeBurayaBakıyorsunKiDWT1453";
+var request = require('request').defaults({ encoding: null });
+var jf = require('jsonfile'); // Requires Reading/Writing JSON
 
+
+var aktifler = "";
+function randomInt(min,max)
+{
+    return Math.floor(Math.random()*(max-min+1)+min);
+}
+function curl(url){
+    var data = "";
+    request(url, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            console.log('request url: '+url);
+            data += body;
+        }
+    });
+    return data;
+
+}
+
+var crypto = require("crypto");
+
+function encrypt(key, data) {
+    var cipher = crypto.createCipher('aes-256-cbc', key);
+    var crypted = cipher.update(data, 'utf-8', 'hex');
+    crypted += cipher.final('hex');
+
+    return crypted;
+}
+
+function decrypt(key, data) {
+    var decipher = crypto.createDecipher('aes-256-cbc', key);
+    var decrypted = decipher.update(data, 'hex', 'utf-8');
+    decrypted += decipher.final('utf-8');
+
+    return decrypted;
+}
+
+function objToString (obj) {
+    var str = '';
+    var it = 0;
+    for (var p in obj) {
+        if (obj.hasOwnProperty(p)) {
+            if(it != 0)
+            {
+                str +=  obj[p];
+
+            }else { it = 1;}
+        }
+    }
+    return str;
+}
 var conf = {
     client_id:      '377680875915788'
     , client_secret:  '62e4f18bce5d2a57cea6251189d908c3'
     , scope:          'public_profile'
-    , redirect_uri:   'https://dwtchat.cleverapps.io/auth/facebook'
+    , redirect_uri:   'http://localhost:8080/auth/facebook'
 };
 
 
@@ -58,6 +113,20 @@ app.get("/", function (req, res) {
    res.sendFile(path.join(__dirname+"/alpha/index.html"));
 
 });
+app.get("/picture/:id", function (req,res) {
+
+    var decryptedText = decrypt(secretKey, req.params.id);
+    console.log(decryptedText);
+    request.get("https://graph.facebook.com/"+decryptedText+"/picture", function (err, ress , body) {
+        res.contentType('image/jpeg');
+        res.send(ress.body);
+    });
+});
+app.get("/profil/:id", function (req,res) {
+    var iddd = decrypt(secretKey, req.params.id);
+    res.redirect("https://facebook.com/"+ iddd);
+
+});
 app.get('/auth/facebook', function(req, res) {
 
     // we don't have a code yet
@@ -95,14 +164,19 @@ app.get('/auth/facebook', function(req, res) {
 // user gets sent here after being authorized
 app.get('/UserHasLoggedIn', function(req, res) {
     graph.get("/me",function (err,res) {
-        io.name = escapeHtml(res.name);
-        io.fbId = escapeHtml(res.id);
+        io.name = res.name;
+        console.log(io.name);
+        var id = objToString(res);
+        var encrypte = encrypt(secretKey, id);
+        io.fbId = encrypte;
         console.log(io.name + ' adlı kullanıcı odaya katıldı.');
         var katildiData = io.name ;
         io.sockets.emit("katildi", katildiData);
         console.log(res);
     });
+    console.log(io.name + "rrr");
     res.cookie('fbID', io.fbId);
+    res.cookie('name', io.name);
     res.cookie('login', true);
     res.redirect("/beta");
 
@@ -115,10 +189,29 @@ io.sockets.on("connection",function (socket) {
         data.user = escapeHtml(data.user);
         timeNow = new Date();
         var hours   = timeNow.getHours();
-        var minutes = timeNow.getMinutes()
+        if(hours < 21)
+        {
+            hours = hours + 3;
+        }
+        else
+        {
+            if(hours == 21) {
+                hours = 00;
+            }
+            if(hours == 22) {
+                hours = 01;
+            }
+            if(hours == 23) {
+                hours = 02;
+            }
+        }
+        var minutes = timeNow.getMinutes();
         var timeString  = ((hours < 10) ? "0" : "") + hours;
         timeString  += ((minutes < 10) ? ":0" : ":") + minutes;
         data.saat = timeString;
+        var rand = randomInt(1,1000);
+        var rand2 = rand + timeNow.getTime();
+
         io.emit("alici",data);
 
     });
@@ -138,13 +231,16 @@ io.sockets.on("connection",function (socket) {
     });
 
     socket.on('join', function (data) {
-        io.name = escapeHtml(data.name);
-        io.fbId = escapeHtml(data.id);
-
+        io.name = data.name;
+        var id = objToString(data);
+        var encrye = encrypt(secretKey, id);
+        io.fbId = encrye;
         console.log(io.name + ' adlı kullanıcı odaya katıldı. '+ socket.id);
-        var katildiData = socket.name ;
+        var katildiData = io.name ;
         io.sockets.emit("katildi", katildiData);
     });
 
 
 });
+
+
