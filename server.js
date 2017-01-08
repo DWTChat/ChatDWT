@@ -162,8 +162,7 @@ app.get('/auth/facebook', function(req, res) {
 
 
 // user gets sent here after being authorized
-app.get('/UserHasLoggedIn', function(req, res) {
-    var io.name;
+app.get('/UserHasLoggedIn', function(req, ress) {
     graph.get("/me",function (err,res) {
         io.name = res.name;
         console.log(io.name);
@@ -174,12 +173,12 @@ app.get('/UserHasLoggedIn', function(req, res) {
         var katildiData = io.name ;
         io.sockets.emit("katildi", katildiData);
         console.log(res);
+            console.log(io.name + "rrr");
+        ress.cookie('fbID', io.fbId);
+        ress.cookie('name', io.name);
+        ress.cookie('login', true);
+        ress.redirect("/beta");
     });
-    console.log(io.name + "rrr");
-    res.cookie('fbID', io.fbId);
-    res.cookie('name', io.name);
-    res.cookie('login', true);
-    res.redirect("/beta");
 
 });
 io.sockets.on("connection",function (socket) {
