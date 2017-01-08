@@ -14,7 +14,7 @@ var conf = {
     client_id:      '377680875915788'
     , client_secret:  '62e4f18bce5d2a57cea6251189d908c3'
     , scope:          'public_profile'
-    , redirect_uri:   'https://dwtchat.cleverapps.io/auth/facebook'
+    , redirect_uri:   'http://localhost:8080/auth/facebook'
 };
 
 
@@ -113,9 +113,9 @@ io.sockets.on("connection",function (socket) {
         data.socketID = io.id;
         data.yazi = escapeHtml(data.yazi);
         data.user = escapeHtml(data.user);
-        timeNow = new Date(Date.UTC());
+        timeNow = new Date();
         var hours   = timeNow.getHours();
-        var minutes = timeNow.getMinutes();
+        var minutes = timeNow.getMinutes()
         var timeString  = ((hours < 10) ? "0" : "") + hours;
         timeString  += ((minutes < 10) ? ":0" : ":") + minutes;
         data.saat = timeString;
