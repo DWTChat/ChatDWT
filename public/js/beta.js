@@ -26,11 +26,11 @@ if(id == null || id == 'undefined' || name == null)
 
 }
 function  imageAl(id) {
-    return image = "http://localhost:8080/picture/" + id;
+    return image = "https://dwtchat.cleverapps.io/picture/" + id;
 
 }
 function profilAl(id) {
-    return profil = "http://localhost:8080/profil/"+ id;
+    return profil = "https://dwtchat.cleverapps.io/profil/"+ id;
 
 }
 function dwtKeyUp(text,e){
