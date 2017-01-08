@@ -69,7 +69,7 @@ var conf = {
     client_id:      '377680875915788'
     , client_secret:  '62e4f18bce5d2a57cea6251189d908c3'
     , scope:          'public_profile'
-    , redirect_uri:   'http://localhost:8080/auth/facebook'
+    , redirect_uri:   'https://dwtchat.cleverapps.io/auth/facebook'
 };
 
 
