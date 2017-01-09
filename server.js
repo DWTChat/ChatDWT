@@ -157,7 +157,6 @@ app.get('/auth/facebook', function(req, res) {
 
 // user gets sent here after being authorized
 app.get('/UserHasLoggedIn', function(req, res) {
-    var io.fbId;
     graph.get("/me",function (err,res) {
         io.name = res.name;
         console.log(io.name);
