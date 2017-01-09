@@ -225,8 +225,7 @@ io.sockets.on("connection",function (socket) {
     socket.on('join', function (data) {
         io.name = data.name;
         var id = objToString(data);
-        var encrye = encrypt(secretKey, id);
-        io.fbId = encrye;
+        io.fbId = id;
         console.log(io.name + ' adlı kullanıcı odaya katıldı. '+ socket.id);
         var katildiData = io.name ;
         io.sockets.emit("katildi", katildiData);
