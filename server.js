@@ -85,7 +85,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.get("/beta",function (req, res) {
 
-    if(req.cookies.name == undefined)
+    if(req.cookies.name == 'undefined')
     {
         res.redirect("/auth/facebook");
     }else
