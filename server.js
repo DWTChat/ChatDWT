@@ -7,6 +7,7 @@ var app = express();
 
 var server = app.listen(8080);
 var fs = require('fs');
+var cookieParser = require('cookie-parser')
 
 var io = require("socket.io").listen(server);
 var path = require("path");
@@ -14,6 +15,8 @@ var graph     = require('fbgraph');
 var secretKey = "SanaNeNiyeBurayaBakıyorsunKiDWT1453";
 var request = require('request').defaults({ encoding: null });
 var jf = require('jsonfile'); // Requires Reading/Writing JSON
+var messages = {items: [  ], alerts : []} ;
+
 
 
 var aktifler = "";
@@ -77,31 +80,21 @@ function escapeHtml(unsafe) {
     return unsafe;
 }
 
-
+app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get("/beta",function (req, res) {
 
-    // we don't have a code yet
-    // so we'll redirect to the oauth
-    /*
-    if (!req.query.code) {
-        var authUrl = graph.getOauthUrl({
-            "client_id":     conf.client_id
-            , "redirect_uri":  conf.redirect_uri
-            , "scope":         conf.scope
-        });
+    console.log(req.cookies.name);
 
-        if (!req.query.error) { //checks whether a user denied the app facebook login/permissions
-             res.redirect("auth/facebook");
-        } else {  //req.query.error == 'access_denied'
-            res.send('access denied');
-        }
-        return;
-    }*/
-
-    res.sendFile(path.join(__dirname+"/beta/index.html"));
+    if(req.cookies.name == undefined)
+    {
+        res.redirect("/auth/facebook");
+    }else
+    {
+        res.sendFile(path.join(__dirname+"/beta/index.html"));
+    }
 
 
 
@@ -124,6 +117,7 @@ app.get("/picture/:id", function (req,res) {
 });
 app.get("/profil/:id", function (req,res) {
     var iddd = decrypt(secretKey, req.params.id);
+    console.log(iddd);
     res.redirect("https://facebook.com/"+ iddd);
 
 });
@@ -209,8 +203,7 @@ io.sockets.on("connection",function (socket) {
         var timeString  = ((hours < 10) ? "0" : "") + hours;
         timeString  += ((minutes < 10) ? ":0" : ":") + minutes;
         data.saat = timeString;
-        var rand = randomInt(1,1000);
-        var rand2 = rand + timeNow.getTime();
+        messages.items.push(data);
 
         io.emit("alici",data);
 

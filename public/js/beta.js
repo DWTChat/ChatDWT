@@ -11,18 +11,28 @@ function readCookie(name) {
     }
     return null;
 }
-
 var socket = io.connect();
 var i = 0;
-var kullanici = io.name;
-var id = readCookie("fbID");
-if(id == null || id == 'undefined')
+var kullanici = decodeURI(readCookie("name"));
+var id = decodeURI(readCookie("fbID"));
+if(id == null || id == 'undefined' || kullanici == null || kullanici == 'undefined')
 {
-    window.location.replace("http://dwtchat.cleverapps.io/auth/facebook");
+    window.location.replace("http://localhost:8080/auth/facebook");
+
+}else
+{
+
+    socket.emit("join",{name : kullanici , fbId :  id });
 
 }
+function  imageAl(id) {
+    return image = "http://localhost:8080/picture/" + id;
 
-var image = "https://graph.facebook.com/" + id + "/picture";
+}
+function profilAl(id) {
+    return profil = "http://localhost:8080/profil/"+ id;
+
+}
 function dwtKeyUp(text,e){
 
     var tus = e.keyCode;
@@ -35,7 +45,7 @@ function dwtKeyUp(text,e){
             return;
         }
         $(".emojionearea-editor").html("");
-        socket.emit("gonder",{"yazi" : mytext, "user" : kullanici, "saat" : "12:35", "image": image, fbId : id, socketID : socket.id});
+        socket.emit("gonder",{"yazi" : mytext, "user" : kullanici, "saat" : "12:35", fbId : id, socketID : socket.id});
         //document.cookie = "mySocketID="+ data.socketID;
         console.log(socket.id);
         console.log(mytext);
@@ -52,11 +62,33 @@ function dwtKeyUp(text,e){
 
 }
 $(document).ready(function () {
+    $(".userAd").html(kullanici);
+    $(".logout").click(function () {
+       document.cookie = "";
+        window.location.replace("http://localhost:8080/beta ");
 
+    });
     socket.on("alici",function (data) {
         if(id == data.fbId)
         {
-            $("#right-messages").append('<div class="row dwt-send-message"><div class="col-md-1 gonderdi"></div><div class="col-md-9 "><div class="your-message dwt-your-message-color-default dwt-message">'+data.yazi+' </div> </div> <div class="col-md-1 gonderdin"> <a target="_blank" href="https://facebook.com/'+data.fbId+'"> <img src="'+ data.image +'"/></a> <br/> <small class="message-time">'+ data.saat +'</small> </div></div>');
+            data.class = "your-message";
+            data.gonderdin = imageAl(data.fbId);
+            data.profil = profilAl(data.fbId);
+            data.gonderdi = "";
+
+        }
+        else
+        {
+            data.class = "user-message";
+            data.gonderdin = "";
+            data.profil = profilAl(data.fbId);
+            data.gonderdi = imageAl(data.fbId);
+
+        }
+
+        if(id == data.fbId)
+        {
+            $("#right-messages").append('<div class="row dwt-send-message"><div class="col-md-1 gonderdi"></div><div class="col-md-9 "><div class="your-message dwt-your-message-color-default dwt-message">'+data.yazi+' </div> </div> <div class="col-md-1 gonderdin"> <a target="_blank" href="'+ profilAl(data.fbId) +'"> <img src="'+ imageAl(data.fbId) +'"/></a> <br/> <small class="message-time">'+ data.saat +'</small> </div></div>');
 
             var height = document.getElementById('dwt-right-messages').scrollHeight;
             document.getElementById('dwt-right-messages').scrollTop = height;
@@ -65,7 +97,7 @@ $(document).ready(function () {
             console.log(data);
         }else
         {
-            $("#right-messages").append('<div class="row dwt-send-message"><div class="col-md-1 gonderdi"> <a target="_blank" href="https://facebook.com/'+data.fbId+'"></a> <img src="'+ data.image +'"/> </a> <br/> <small class="message-time">'+ data.saat +'</small></div><div class="col-md-9 "><div class="user-message dwt-message">'+data.yazi+' </div> </div> <div class="col-md-1 gonderdin"> </div></div>');
+            $("#right-messages").append('<div class="row dwt-send-message"><div class="col-md-1 gonderdi"> <a target="_blank" href="'+ profilAl(data.fbId) +'"></a> <img src="'+ data.image +'"/> </a> <br/> <small class="message-time">'+ data.saat +'</small></div><div class="col-md-9 "><div class="user-message dwt-message">'+data.yazi+' </div> </div> <div class="col-md-1 gonderdin"> </div></div>');
 
             var height = document.getElementById('dwt-right-messages').scrollHeight;
             document.getElementById('dwt-right-messages').scrollTop = height;
@@ -93,5 +125,7 @@ $(document).ready(function () {
         console.log(document.getElementById('dwt-right-messages').scrollHeight);
         console.log(data);
     });
+
+
 
 });

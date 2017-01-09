@@ -14,6 +14,15 @@
     <link rel="stylesheet" href="emojionearea-master/dist/emojionearea.css">
     <script type="text/javascript" src="emojionearea-master/dist/emojionearea.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+    <script type="text/javascript">
+        var dwtChat = angular.module("dwtChat",[]);
+        var search = dwtChat.controller("search", function ($scope) {
+
+            $scope.messages = messages;
+
+        });
+    </script>
     <script type="text/javascript" src="js/beta.js"></script>
 
 
@@ -40,7 +49,7 @@
     </script>
     <link rel="stylesheet" href="css/beta.css"/>
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i&amp;subset=cyrillic,cyrillic-ext,greek,greek-ext,latin-ext,vietnamese" rel="stylesheet"></head>
-<body class="dwt-messages-color-default">
+<body class="dwt-messages-color-default" ng-app="dwtChat">
 
     <div class="header">
 
@@ -95,7 +104,7 @@
                         <span class="input-group-btn">
                             <<i class="mdi mdi-magnify"></i>
                         </span>
-                        <input type="text" class="form-control" placeholder="Ara"><br/>
+                        <input type="text" ng-model="searchInput" class="form-control" placeholder="Ara"><br/>
                         <hr/>
                     </div><!-- /input-group -->
 
@@ -171,7 +180,7 @@
 
                 <div class="col-md-3 footer left-footer dwt-footer-color-default">
                     <div class="row">
-                        <div class="col-md-10">
+                        <div class="col-md-10 userAd">
                             Mehmet Ali Peker
                         </div>
                         <div class="col-md-2 logout">
@@ -199,9 +208,11 @@
 
                     <div  class="row messages">
 
-                        <div class="col-md-12" id="right-messages">
+                        <div class="col-md-12" id="right-messages" ng-controller="search">
 
-
+                            <li ng-repeat="message in messages.items | filter : searchInput">
+                                {{ message }}
+                            </li>
 
                         </div>
 
@@ -232,7 +243,6 @@
     <!-- @JavaScripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.3.7/js/tether.min.js" integrity="sha384-XTs3FgkjiBgo8qjEjBk0tGmf3wPrWtA6coPfQDfFEY8AnYJwjalXCiosYRBIBZX8" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
     <!-- JavaScripts -->
 
 
