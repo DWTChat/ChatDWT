@@ -157,6 +157,7 @@ app.get('/auth/facebook', function(req, res) {
 
 // user gets sent here after being authorized
 app.get('/UserHasLoggedIn', function(req, res) {
+    var io.fbId;
     graph.get("/me",function (err,res) {
         io.name = res.name;
         console.log(io.name);
@@ -164,11 +165,13 @@ app.get('/UserHasLoggedIn', function(req, res) {
         var encrypte = encrypt(secretKey, id);
         io.fbId = encrypte;
         console.log(io.name + ' adlı kullanıcı odaya katıldı.');
+        console.log(encrypte);
         var katildiData = io.name ;
         io.sockets.emit("katildi", katildiData);
         console.log(res);
     });
     console.log(io.name + "rrr");
+    console.log(io.name + "rrrr"); 
     res.cookie('fbID', io.fbId);
     res.cookie('name', io.name);
     res.cookie('login', true);
