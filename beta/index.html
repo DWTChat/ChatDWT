@@ -13,7 +13,7 @@
 
     <link rel="stylesheet" href="emojionearea-master/dist/emojionearea.css">
     <script type="text/javascript" src="emojionearea-master/dist/emojionearea.min.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
+    <script src="/socket.io/socket.io.js"></script><!--
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
     <script type="text/javascript">
         var dwtChat = angular.module("dwtChat",[]);
@@ -22,7 +22,7 @@
             $scope.messages = messages;
 
         });
-    </script>
+    </script>-->
     <script type="text/javascript" src="js/beta.js"></script>
 
 
@@ -210,9 +210,7 @@
 
                         <div class="col-md-12" id="right-messages" ng-controller="search">
 
-                            <li ng-repeat="message in messages.items | filter : searchInput">
-                                {{ message }}
-                            </li>
+
 
                         </div>
 

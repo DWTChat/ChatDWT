@@ -15,15 +15,9 @@ var socket = io.connect();
 var i = 0;
 var kullanici = decodeURI(readCookie("name"));
 var id = decodeURI(readCookie("fbID"));
-<<<<<<< HEAD
 if(id == null || id == 'undefined' || kullanici == null || kullanici == 'undefined')
 {
     window.location.replace("http://localhost:8080/auth/facebook");
-=======
-if(id == null || id == 'undefined' || name == null)
-{
-    window.location.replace("https://dwtchat.cleverapps.io/auth/facebook");
->>>>>>> origin/master
 
 }else
 {
@@ -32,19 +26,11 @@ if(id == null || id == 'undefined' || name == null)
 
 }
 function  imageAl(id) {
-<<<<<<< HEAD
-    return image = "http://localhost:8080/picture/" + id;
-
-}
-function profilAl(id) {
-    return profil = "http://localhost:8080/profil/"+ id;
-=======
     return image = "https://dwtchat.cleverapps.io/picture/" + id;
 
 }
 function profilAl(id) {
     return profil = "https://dwtchat.cleverapps.io/profil/"+ id;
->>>>>>> origin/master
 
 }
 function dwtKeyUp(text,e){
@@ -79,11 +65,7 @@ $(document).ready(function () {
     $(".userAd").html(kullanici);
     $(".logout").click(function () {
        document.cookie = "";
-<<<<<<< HEAD
-        window.location.replace("http://localhost:8080/beta ");
-=======
-        window.location.replace("https://dwtchat.cleverapps.io/beta ");
->>>>>>> origin/master
+        window.location.replace("https://dwtchat.cleverapps.io/beta");
 
     });
     socket.on("alici",function (data) {
@@ -146,8 +128,4 @@ $(document).ready(function () {
 
 
 
-<<<<<<< HEAD
 });
-=======
-});
->>>>>>> origin/master

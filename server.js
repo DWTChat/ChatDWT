@@ -72,7 +72,7 @@ var conf = {
     client_id:      '377680875915788'
     , client_secret:  '62e4f18bce5d2a57cea6251189d908c3'
     , scope:          'public_profile'
-    , redirect_uri:   'https://dwtchat.cleverapps.io/auth/facebook'
+    , redirect_uri:   'http://localhost:8080/auth/facebook'
 };
 
 
@@ -156,7 +156,7 @@ app.get('/auth/facebook', function(req, res) {
 
 
 // user gets sent here after being authorized
-app.get('/UserHasLoggedIn', function(req, ress) {
+app.get('/UserHasLoggedIn', function(req, res) {
     graph.get("/me",function (err,res) {
         io.name = res.name;
         console.log(io.name);
@@ -167,12 +167,12 @@ app.get('/UserHasLoggedIn', function(req, ress) {
         var katildiData = io.name ;
         io.sockets.emit("katildi", katildiData);
         console.log(res);
-            console.log(io.name + "rrr");
-        ress.cookie('fbID', io.fbId);
-        ress.cookie('name', io.name);
-        ress.cookie('login', true);
-        ress.redirect("/beta");
     });
+    console.log(io.name + "rrr");
+    res.cookie('fbID', io.fbId);
+    res.cookie('name', io.name);
+    res.cookie('login', true);
+    res.redirect("/beta");
 
 });
 io.sockets.on("connection",function (socket) {
