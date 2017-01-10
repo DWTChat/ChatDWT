@@ -1,7 +1,6 @@
 /**
  * Created by Mehmet Ali Peker on 07.12.2016.
  */
-
 var express = require("express");
 var app = express();
 
