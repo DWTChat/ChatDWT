@@ -225,7 +225,7 @@ io.sockets.on("connection",function (socket) {
         var id = objToString(data);
         userId = id;
         console.log(userName + ' adlı kullanıcı odaya katıldı. '+ socket.id);
-        var katildiData = io.name ;
+        var katildiData = userName ;
         io.sockets.emit("katildi", katildiData);
     });
 
