@@ -151,25 +151,24 @@ app.get('/auth/facebook', function(req, res) {
 
 });
 
-
+var userName,userId;
 // user gets sent here after being authorized
 app.get('/UserHasLoggedIn', function(req, res) {
     graph.get("/me",function (err,res) {
-        io.name = res.name;
-        console.log(io.name);
+        userName = res.name;
+        console.log(userName);
         var id = objToString(res);
         var encrypte = encrypt(secretKeyy, id);
-        io.fbId = encrypte;
-        console.log(io.name + ' adlı kullanıcı odaya katıldı.');
+        userId = encrypte;
+        console.log(userName + ' adlı kullanıcı odaya katıldı.');
         console.log(encrypte);
-        var katildiData = io.name ;
+        var katildiData = userName ;
         io.sockets.emit("katildi", katildiData);
         console.log(res);
     });
-    console.log(io.name + "rrr");
-    console.log(io.name + "rrrr"); 
-    res.cookie('fbID', io.fbId);
-    res.cookie('name', io.name);
+    console.log(userName + "rrrr"); 
+    res.cookie('fbID', userId);
+    res.cookie('name', userName);
     res.cookie('login', true);
     res.redirect("/beta");
 
@@ -177,7 +176,6 @@ app.get('/UserHasLoggedIn', function(req, res) {
 io.sockets.on("connection",function (socket) {
 
     socket.on("gonder",function (data) {
-        data.socketID = io.id;
         data.yazi = escapeHtml(data.yazi);
         data.user = escapeHtml(data.user);
         timeNow = new Date();
@@ -209,24 +207,24 @@ io.sockets.on("connection",function (socket) {
     });
 
     socket.on('disconnect', function(){
-        if(io.name != undefined){
-            var ayrildiData = io.name ;
+        if(userName != undefined){
+            var ayrildiData = userName ;
             console.log(ayrildiData);
             io.sockets.emit("ayrildi", ayrildiData);
         }
     });
 
     socket.on('reconnect', function(){
-        var reConnectData = io.name + ' adlı kullanıcı yeniden bağlandı.';
+        var reConnectData = userName + ' adlı kullanıcı yeniden bağlandı.';
         console.log(reConnectData);
         io.sockets.emit("reconnected", reConnectData);
     });
 
     socket.on('join', function (data) {
-        io.name = data.name;
+        userName = data.name;
         var id = objToString(data);
-        io.fbId = id;
-        console.log(io.name + ' adlı kullanıcı odaya katıldı. '+ socket.id);
+        userId = id;
+        console.log(userName + ' adlı kullanıcı odaya katıldı. '+ socket.id);
         var katildiData = io.name ;
         io.sockets.emit("katildi", katildiData);
     });
