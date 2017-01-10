@@ -97,7 +97,7 @@ $(document).ready(function () {
             console.log(data);
         }else
         {
-            $("#right-messages").append('<div class="row dwt-send-message"><div class="col-md-1 gonderdi"> <a target="_blank" href="'+ profilAl(data.fbId) +'"></a> <img src="'+ data.image +'"/> </a> <br/> <small class="message-time">'+ data.saat +'</small></div><div class="col-md-9 "><div class="user-message dwt-message">'+data.yazi+' </div> </div> <div class="col-md-1 gonderdin"> </div></div>');
+            $("#right-messages").append('<div class="row dwt-send-message"><div class="col-md-1 gonderdi"> <a target="_blank" href="'+ profilAl(data.fbId) +'"></a> <img src="'+ imageAl(data.fbId) +'"/> </a> <br/> <small class="message-time">'+ data.saat +'</small></div><div class="col-md-9 "><div class="user-message dwt-message">'+data.yazi+' </div> </div> <div class="col-md-1 gonderdin"> </div></div>');
 
             var height = document.getElementById('dwt-right-messages').scrollHeight;
             document.getElementById('dwt-right-messages').scrollTop = height;
